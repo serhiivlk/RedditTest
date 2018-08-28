@@ -4,11 +4,11 @@ import android.os.Bundle
 import com.serhii.redditto.R
 import com.serhii.redditto.core.extension.findFragmentById
 import com.serhii.redditto.core.extension.replaceFragment
-import dagger.android.support.DaggerAppCompatActivity
+import com.serhii.redditto.core.platform.BaseActivity
 import kotlinx.android.synthetic.main.activity_posts.*
 import javax.inject.Inject
 
-class PostsActivity : DaggerAppCompatActivity() {
+class PostsActivity : BaseActivity() {
 
     @Inject
     lateinit var injectedFragment: PostsFragment

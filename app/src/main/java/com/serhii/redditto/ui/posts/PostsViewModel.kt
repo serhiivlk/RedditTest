@@ -17,7 +17,7 @@ class PostsViewModel @Inject constructor(
     val errorMessage: MutableLiveData<String> = MutableLiveData()
 
     fun loadPosts() {
-        getPosts.execute {
+        getPosts.execute(Unit) {
             when (it) {
                 is Success -> handlePosts(it.data)
                 is Failure -> handleFailure(it.error)

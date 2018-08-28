@@ -3,6 +3,7 @@ package com.serhii.redditto.ui.posts
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.serhii.redditto.R
 import com.serhii.redditto.core.extension.inflate
 import com.serhii.redditto.ui.model.PostView
@@ -14,9 +15,9 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.PostViewHolder>() {
         notifyDataSetChanged()
     }
 
-    private var clickListener: (PostView) -> Unit = { _ -> }
+    private var clickListener: (String) -> Unit = { _ -> }
 
-    fun onItemClick(listener: (PostView) -> Unit) {
+    fun onItemClick(listener: (String) -> Unit) {
         clickListener = listener
     }
 
@@ -32,10 +33,14 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.PostViewHolder>() {
     override fun getItemCount(): Int = posts.size
 
     class PostViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        fun bind(post: PostView, clickListener: (PostView) -> Unit) = with(itemView) {
+        fun bind(post: PostView, clickListener: (String) -> Unit) = with(itemView) {
             title.text = post.title
 
-            setOnClickListener { clickListener(post) }
+            Glide.with(itemView)
+                    .load(post.thumbnail)
+                    .into(thumbnail)
+
+            setOnClickListener { clickListener(post.permalink) }
         }
     }
 }

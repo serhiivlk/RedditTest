@@ -18,6 +18,13 @@ class PostRepository @Inject constructor(private val service: PostService) {
         }
     }
 
+    fun postByPermalink(permalink: String): Result<Post> {
+        return request(service.postDetail(permalink)) { response ->
+            val first = response?.first()
+            return@request first?.toPosts()?.map { it.toPost() }?.first() ?: Post.EMPTY
+        }
+    }
+
     private fun <T, R> request(call: Call<T>, transform: (T?) -> R): Result<R> {
         return try {
             val response = call.execute()

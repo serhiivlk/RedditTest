@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 class GetPostsUseCase @Inject constructor(
         private val postRepository: PostRepository
-) : UseCase<List<Post>>() {
-    override suspend fun executeOnBackground(): Result<List<Post>> {
+) : UseCase<Unit, List<Post>>() {
+    override suspend fun executeOnBackground(params: Unit): Result<List<Post>> {
         return postRepository.popular()
     }
 }

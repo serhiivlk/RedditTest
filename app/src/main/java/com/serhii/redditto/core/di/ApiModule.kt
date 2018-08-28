@@ -30,7 +30,7 @@ class ApiModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient, moshi: Moshi): Retrofit {
         return Retrofit.Builder()
-                .baseUrl("https://www.reddit.com/r/")
+                .baseUrl("https://www.reddit.com/")
                 .client(client)
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .addCallAdapterFactory(CoroutineCallAdapterFactory.invoke())
