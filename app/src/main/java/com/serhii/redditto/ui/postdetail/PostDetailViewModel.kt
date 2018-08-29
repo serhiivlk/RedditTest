@@ -4,8 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.serhii.redditto.core.interactor.GetPostUseCase
 import com.serhii.redditto.core.model.Post
-import com.serhii.redditto.data.remote.Failure
-import com.serhii.redditto.data.remote.Success
+import timber.log.Timber
 import javax.inject.Inject
 
 class PostDetailViewModel @Inject constructor(
@@ -13,15 +12,11 @@ class PostDetailViewModel @Inject constructor(
 ) : ViewModel() {
     val title = MutableLiveData<String>()
     val thumbnail = MutableLiveData<String>()
-    val errorMessage = MutableLiveData<String>()
 
     fun loadDetail(permalink: String?) {
         if (permalink == null) return
         getPost.execute(GetPostUseCase.Params(permalink)) {
-            when (it) {
-                is Success -> handlePost(it.data)
-                is Failure -> handleFailure(it.error)
-            }
+            it.determine(::handlePost, ::handleFailure)
         }
     }
 
@@ -31,7 +26,7 @@ class PostDetailViewModel @Inject constructor(
     }
 
     private fun handleFailure(throwable: Throwable) {
-        errorMessage.value = throwable.message
+        Timber.e(throwable)
     }
 
     override fun onCleared() {

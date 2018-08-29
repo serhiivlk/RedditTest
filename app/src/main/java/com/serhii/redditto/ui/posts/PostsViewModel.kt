@@ -4,8 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.serhii.redditto.core.interactor.GetPostsUseCase
 import com.serhii.redditto.core.model.Post
-import com.serhii.redditto.data.remote.Failure
-import com.serhii.redditto.data.remote.Success
 import com.serhii.redditto.ui.model.PostView
 import com.serhii.redditto.ui.model.toView
 import timber.log.Timber
@@ -28,10 +26,7 @@ class PostsViewModel @Inject constructor(
         getPosts.execute(Unit) {
             firstLoading = false
             dataLoading.value = firstLoading
-            when (it) {
-                is Success -> handlePosts(it.data)
-                is Failure -> handleFailure(it.error)
-            }
+            it.determine(::handlePosts, ::handleFailure)
         }
     }
 
