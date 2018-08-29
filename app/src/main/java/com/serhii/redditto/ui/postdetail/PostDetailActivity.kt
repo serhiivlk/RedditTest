@@ -25,7 +25,6 @@ class PostDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
         setupToolbar(toolbar) {
-            setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
 

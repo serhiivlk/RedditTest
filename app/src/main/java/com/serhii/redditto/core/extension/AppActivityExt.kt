@@ -1,5 +1,8 @@
 package com.serhii.redditto.core.extension
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.ActionBar
@@ -20,4 +23,9 @@ fun AppCompatActivity.replaceFragment(id: Int, fragment: Fragment,
 fun AppCompatActivity.setupToolbar(toolbar: Toolbar, block: ActionBar.() -> Unit) {
     setSupportActionBar(toolbar)
     supportActionBar?.apply(block)
+}
+
+inline fun <reified T : ViewModel> AppCompatActivity.obtainViewModel(
+        factory: ViewModelProvider.Factory, block: T.() -> Unit): T {
+    return ViewModelProviders.of(this, factory)[T::class.java].apply(block)
 }

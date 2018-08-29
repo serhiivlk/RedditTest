@@ -8,16 +8,26 @@ import com.serhii.redditto.data.remote.Failure
 import com.serhii.redditto.data.remote.Success
 import com.serhii.redditto.ui.model.PostView
 import com.serhii.redditto.ui.model.toView
+import timber.log.Timber
 import javax.inject.Inject
 
 class PostsViewModel @Inject constructor(
         private val getPosts: GetPostsUseCase
 ) : ViewModel() {
-    val posts = MutableLiveData<List<PostView>>()
-    val errorMessage: MutableLiveData<String> = MutableLiveData()
+    val posts = MutableLiveData<List<PostView>>().apply {
+        value = emptyList()
+    }
+    val dataLoading = MutableLiveData<Boolean>()
+    private var firstLoading = true
 
     fun loadPosts() {
+        if (dataLoading.value == true) {
+            return
+        }
+        dataLoading.value = firstLoading
         getPosts.execute(Unit) {
+            firstLoading = false
+            dataLoading.value = firstLoading
             when (it) {
                 is Success -> handlePosts(it.data)
                 is Failure -> handleFailure(it.error)
@@ -30,7 +40,7 @@ class PostsViewModel @Inject constructor(
     }
 
     private fun handleFailure(throwable: Throwable) {
-        errorMessage.value = throwable.message ?: "Post load error"
+        Timber.e(throwable)
     }
 
     override fun onCleared() {
