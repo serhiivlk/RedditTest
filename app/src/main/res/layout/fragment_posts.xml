@@ -2,6 +2,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
     <data>
@@ -24,7 +25,7 @@
             posts="@{viewModel.posts}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="@{viewModel.dataLoading ? View.GONE : View.VISIBLE}"
+            android:visibility="@{(viewModel.dataLoading || viewModel.isFailure) ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +36,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.dataLoading ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:onClick="@{() -> viewModel.loadPosts()}"
+            android:text="Try again"
+            android:visibility="@{viewModel.isFailure ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

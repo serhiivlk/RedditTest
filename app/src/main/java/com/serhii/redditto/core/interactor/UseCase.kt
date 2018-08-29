@@ -2,6 +2,7 @@ package com.serhii.redditto.core.interactor
 
 import com.serhii.redditto.data.remote.Result
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -13,8 +14,8 @@ abstract class UseCase<in P, out T> where T : Any {
 
     abstract suspend fun executeOnBackground(params: P): Result<T>
 
-    fun execute(params: P, onResult: (Result<T>) -> Unit) {
+    fun execute(params: P, onResult: (Result<T>) -> Unit): Job {
         val job = async(background) { executeOnBackground(params) }
-        launch(ui) { onResult(job.await()) }
+        return launch(ui) { onResult(job.await()) }
     }
 }

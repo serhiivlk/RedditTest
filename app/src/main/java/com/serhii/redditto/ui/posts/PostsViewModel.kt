@@ -6,6 +6,7 @@ import com.serhii.redditto.core.interactor.GetPostsUseCase
 import com.serhii.redditto.core.model.Post
 import com.serhii.redditto.ui.model.PostView
 import com.serhii.redditto.ui.model.toView
+import kotlinx.coroutines.experimental.Job
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,16 +17,19 @@ class PostsViewModel @Inject constructor(
         value = emptyList()
     }
     val dataLoading = MutableLiveData<Boolean>()
+    val isFailure = MutableLiveData<Boolean>()
     private var firstLoading = true
+    private var job: Job? = null
 
     fun loadPosts() {
-        if (dataLoading.value == true) {
+        if (job?.isActive == true) {
             return
         }
-        dataLoading.value = firstLoading
-        getPosts.execute(Unit) {
+        dataLoading.value = firstLoading || (isFailure.value == true)
+        isFailure.value = false
+        job = getPosts.execute(Unit) {
             firstLoading = false
-            dataLoading.value = firstLoading
+            dataLoading.value = false
             it.determine(::handlePosts, ::handleFailure)
         }
     }
@@ -36,6 +40,7 @@ class PostsViewModel @Inject constructor(
 
     private fun handleFailure(throwable: Throwable) {
         Timber.e(throwable)
+        isFailure.value = true
     }
 
     override fun onCleared() {
